@@ -29,7 +29,7 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     int y = 32;
 
     // corpo / boca / coração / boca mastigando / cara triste
-    mg_ui_body_draw(canvas, x, y, happy, eating, hungry);
+    mg_ui_body_draw(canvas, x, y, state->form, happy, eating, hungry);
 
     // mão de carinho
     if(state->petting) {

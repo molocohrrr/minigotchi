@@ -8,12 +8,23 @@
 #include <furi.h>
 #include <gui/gui.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef enum {
     MinigotchiFoodNone = 0,
     MinigotchiFoodBurger,
     MinigotchiFoodSoda,
 } MinigotchiFood;
+
+typedef enum {
+    MinigotchiFormStage0 = 0,
+    MinigotchiFormStage1,
+    MinigotchiFormStage2,
+    MinigotchiFormStage3,
+    MinigotchiFormStage4,
+    MinigotchiFormStage5,
+    MinigotchiFormStage6,
+} MinigotchiForm;
 
 typedef struct {
     int position_index;
@@ -27,5 +38,7 @@ typedef struct {
     uint32_t eat_end_tick;
     MinigotchiFood current_food;
     bool hungry;
-    uint32_t last_feed_timestamp;  
+    MinigotchiForm form;
+    uint32_t birth_timestamp;   
+    uint32_t last_feed_timestamp;
 } MinigotchiState;
