@@ -14,4 +14,5 @@ void mg_ui_body_draw(Canvas* canvas,
                      MinigotchiForm form,
                      bool happy,
                      bool eating,
-                     bool hungry);
+                     bool hungry,
+                     bool sleeping);

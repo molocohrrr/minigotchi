@@ -92,6 +92,7 @@ static MinigotchiApp* minigotchi_app_alloc(void) {
     if(!loaded) {
         // 1ª vez: cria estado novo completo
         mg_init(&app->state);
+        minigotchi_save_state(&app->state);
     } else {
         // veio do disco
         app->state.running = true;

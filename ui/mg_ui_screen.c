@@ -21,15 +21,15 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     bool happy  = state->petting;      // carinho
     bool eating = state->eating;       // comendo
     bool hungry = state->hungry;       // fominha!
+    bool sleeping = state->sleeping;   // mimindo!
 
-    // se estiver feliz, comendo ou fominha, fica no centro
     int index = (happy || eating || hungry) ? 1 : state->position_index;
 
     int x = x_positions[index];
     int y = 32;
 
-    // corpo / boca / coração / boca mastigando / cara triste
-    mg_ui_body_draw(canvas, x, y, state->form, happy, eating, hungry);
+    // corpo / boca / coração / boca mastigando / cara triste    
+    mg_ui_body_draw(canvas, x, y, state->form, happy, eating, hungry, sleeping);
 
     // mão de carinho
     if(state->petting) {
@@ -41,6 +41,30 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
         int food_x = x - 8;   // posição da comida
         int food_y = y + 10;
         mg_ui_food_draw(canvas, food_x, food_y, state->current_food);
+    }
+
+    // ZZZ de sono
+    if(sleeping) {
+        int base_x = x + 10;
+        int base_y = y - 8;
+
+        uint32_t t = furi_get_tick();
+        int phase = (t / 500) % 2; // velocidade da animação
+
+        int offset_x = 0;
+        int offset_y = 0;
+
+        if(phase == 1) {
+            offset_x = 2;   
+            offset_y = -2;  
+        }
+
+        int z_x = base_x + offset_x;
+        int z_y = base_y + offset_y;
+
+        canvas_draw_str(canvas, z_x,         z_y,         "Z");
+        canvas_draw_str(canvas, z_x + 6,     z_y - 4,     "Z");
+        canvas_draw_str(canvas, z_x + 12,    z_y - 8,     "Z");
     }
 
     // menu inferior

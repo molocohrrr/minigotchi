@@ -38,6 +38,7 @@ typedef struct {
     uint32_t eat_end_tick;
     MinigotchiFood current_food;
     bool hungry;
+    bool sleeping; 
     MinigotchiForm form;
     uint32_t birth_timestamp;   
     uint32_t last_feed_timestamp;

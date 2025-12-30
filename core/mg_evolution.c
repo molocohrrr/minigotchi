@@ -19,10 +19,9 @@ void mg_evolution_update(MinigotchiState* state, uint32_t now_ts) {
         return;
     }
 
-    // dias completos desde o nascimento
     uint32_t elapsed = now_ts - state->birth_timestamp;
     uint32_t days = elapsed / (24u * 60u * 60u); // segundos -> dias
-    //uint32_t days = elapsed / (5); // segundos -> dias
+    //uint32_t days = elapsed / (60 * 60); // segundos -> dias
 
     if(days > 6u) days = 6u;
 
