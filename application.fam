@@ -1,0 +1,9 @@
+App(
+    appid="minigotchi",
+    name="MiniGotchi",
+    entry_point="minigotchi_app",
+    apptype=FlipperAppType.EXTERNAL,
+    stack_size=4096,
+    fap_category="Games",
+    fap_icon="images/minigotchi_icon_10x10px.png",
+)
