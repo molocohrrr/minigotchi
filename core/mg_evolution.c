@@ -4,26 +4,64 @@
 // Não desenha nada e não conhece detalhes de UI.
 
 #include "mg_evolution.h"
+#include <furi_hal_rtc.h>
+
+static uint32_t mg_day_index(const DateTime* dt) {
+    return ((uint32_t)dt->year * 512u) +
+           ((uint32_t)dt->month * 32u) +
+           (uint32_t)dt->day;
+}
 
 void mg_evolution_init(MinigotchiState* state, uint32_t now_ts) {
+    if(state->last_evolution_day != 0) {
+        return;
+    }
+
+    // Novo bichinho (primeira vez / sem save válido)
     state->birth_timestamp = now_ts;
     state->last_feed_timestamp = now_ts;
     state->form = MinigotchiFormStage0;
     state->hungry = false;
+
+    // Inicializa o "dia de evolução" com o dia de hoje
+    DateTime now;
+    furi_hal_rtc_get_datetime(&now);
+    state->last_evolution_day = mg_day_index(&now);
 }
 
 void mg_evolution_update(MinigotchiState* state, uint32_t now_ts) {
-    if(now_ts < state->birth_timestamp) {
-        state->birth_timestamp = now_ts;
-        state->form = MinigotchiFormStage0;
+    (void)now_ts;
+
+    if(state->form >= MinigotchiFormStage6) {
         return;
     }
 
-    uint32_t elapsed = now_ts - state->birth_timestamp;
-    uint32_t days = elapsed / (24u * 60u * 60u); // segundos -> dias
-    //uint32_t days = elapsed / (60 * 60); // segundos -> dias
+    DateTime now;
+    furi_hal_rtc_get_datetime(&now);
 
-    if(days > 6u) days = 6u;
+    uint32_t today = mg_day_index(&now);
 
-    state->form = (MinigotchiForm)days;
+    // Evolução 9h
+    if(now.hour < 9) {
+        return;
+    }
+
+    if(state->last_evolution_day == 0) {
+        state->last_evolution_day = today;
+        return;
+    }
+
+     if(today <= state->last_evolution_day) {
+        return;
+    }
+
+    uint32_t diff_days = today - state->last_evolution_day;
+
+    uint32_t new_form = (uint32_t)state->form + diff_days;
+    if(new_form > (uint32_t)MinigotchiFormStage6) {
+        new_form = (uint32_t)MinigotchiFormStage6;
+    }
+
+    state->form = (MinigotchiForm)new_form;
+    state->last_evolution_day = today;
 }

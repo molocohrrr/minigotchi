@@ -67,7 +67,6 @@ void mg_ui_body_draw(Canvas* canvas,
                      bool eating,
                      bool hungry,
                      bool sleeping) {
-
    
     int draw_y = y;
 
@@ -80,7 +79,6 @@ void mg_ui_body_draw(Canvas* canvas,
     if(sleeping) {
         draw_y += 2;
     }
-
     
     // Corpo
     int body_w;

@@ -129,6 +129,7 @@ int32_t minigotchi_app(void* p) {
     UNUSED(p);
 
     MinigotchiApp* app = minigotchi_app_alloc();
+    MinigotchiForm last_form = app->state.form;
 
     while(app->state.running) {
         InputEvent event;
@@ -147,12 +148,18 @@ int32_t minigotchi_app(void* p) {
                     mg_feed(&app->state, now, MinigotchiFoodSoda);
                     minigotchi_save_state(&app->state);
                 } else if(event.key == InputKeyBack) {
+                    minigotchi_save_state(&app->state);
                     app->state.running = false;
                 }
             }
         }
 
         mg_update(&app->state, now);
+
+        if(app->state.form != last_form) {
+            minigotchi_save_state(&app->state);
+            last_form = app->state.form;
+        }
 
         view_port_update(app->view_port);
     }
