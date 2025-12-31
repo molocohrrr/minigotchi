@@ -12,8 +12,26 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     canvas_clear(canvas);
 
     // título em negrito
-    canvas_draw_str(canvas, 2, 10, "M i n i G o t c h i");
-    canvas_draw_str(canvas, 3, 10, "M i n i G o t c h i");
+    const char* title = "M i n i G o t c h i";
+
+    canvas_draw_str_aligned(
+        canvas,
+        64,
+        0,
+        AlignCenter,
+        AlignTop,
+        title
+    );
+
+    // desloca 1px pra “engrossar”
+    canvas_draw_str_aligned(
+        canvas,
+        65,
+        0,
+        AlignCenter,
+        AlignTop,
+        title
+    );
 
     int x_positions[3] = {20, 60, 100};
 
@@ -46,7 +64,7 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     // ZZZ de sono
     if(sleeping) {
         int base_x = x + 10;
-        int base_y = y - 8;
+        int base_y = y - 6;
 
         uint32_t t = furi_get_tick();
         int phase = (t / 500) % 2; // velocidade da animação
