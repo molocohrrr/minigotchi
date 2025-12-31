@@ -138,7 +138,7 @@ int32_t minigotchi_app(void* p) {
         uint32_t now = furi_get_tick();
 
         if(status == FuriStatusOk) {
-            if(event.type == InputTypeShort || event.type == InputTypePress) {
+            if(event.type == InputTypeShort) {
                 if(event.key == InputKeyOk) {
                     mg_pet(&app->state, now);
                 } else if(event.key == InputKeyLeft) {

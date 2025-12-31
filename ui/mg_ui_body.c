@@ -75,7 +75,7 @@ void mg_ui_body_draw(Canvas* canvas,
         draw_y += 4;
     }
 
-    // se estiver dormindo, rebaixa um pouco mais o corpo TODO
+    // se estiver dormindo, rebaixa o corpo
     if(sleeping) {
         draw_y += 2;
     }

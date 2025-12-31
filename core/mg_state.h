@@ -37,10 +37,15 @@ typedef struct {
     bool eating;
     uint32_t eat_end_tick;
     MinigotchiFood current_food;
+    // Fome
+    uint8_t  hunger_level;          
+    uint32_t last_hunger_update_ts; 
     bool hungry;
-    bool sleeping; 
+    // Sono
+    bool sleeping;
+    // Evolução
     MinigotchiForm form;
-    uint32_t birth_timestamp;   
+    uint32_t birth_timestamp;
     uint32_t last_feed_timestamp;
     uint32_t last_evolution_day;
 } MinigotchiState;

@@ -9,3 +9,4 @@
 
 // Desenha hambúrguer ou refrigerante
 void mg_ui_food_draw(Canvas* canvas, int x, int y, MinigotchiFood food);
+void mg_ui_food_draw_soda(Canvas* canvas, int x, int y);

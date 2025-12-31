@@ -3,15 +3,41 @@
 // Coordena o corpo, a mão de carinho, a comida e o texto da interface.
 // Não altera estado do jogo; apenas lê e desenha.
 
+#include <furi.h>
 #include "mg_ui_screen.h"
 #include "mg_ui_body.h"
 #include "mg_ui_hand.h"
 #include "mg_ui_food.h"
 
+static void mg_ui_draw_hunger(Canvas* canvas, const MinigotchiState* state) {
+    const int max_bars   = 5;
+    const int bar_w      = 5;
+    const int bar_h      = 5;
+    const int start_x    = 2;   // bem à esquerda
+    const int start_y    = 14;  // começando abaixo do título
+    const int spacing    = 2;
+
+    // soda pequena acima das barrinhas
+    int soda_x = start_x - 2;
+    int soda_y = start_y - 11;
+    mg_ui_food_draw_soda(canvas, soda_x, soda_y);
+
+    // desenha barrinhas
+    for(int i = 0; i < max_bars; i++) {
+        int y = start_y + (max_bars - 1 - i) * (bar_h + spacing);
+        if(i < state->hunger_level) {
+            // barrinha cheia
+            canvas_draw_box(canvas, start_x, y, bar_w, bar_h);
+        } else {
+            // slot vazio (só contorno)
+            canvas_draw_frame(canvas, start_x, y, bar_w, bar_h);
+        }
+    }
+}
+
 void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     canvas_clear(canvas);
 
-    // título em negrito
     const char* title = "M i n i G o t c h i";
 
     canvas_draw_str_aligned(
@@ -23,7 +49,6 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
         title
     );
 
-    // desloca 1px pra “engrossar”
     canvas_draw_str_aligned(
         canvas,
         65,
@@ -33,35 +58,49 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
         title
     );
 
-    int x_positions[3] = {20, 60, 100};
+    // barra de fome à esquerda
+    mg_ui_draw_hunger(canvas, state);
+
+    int x_positions[3] = {25, 60, 95};
 
     // flags derivadas do estado
-    bool happy  = state->petting;      // carinho
-    bool eating = state->eating;       // comendo
-    bool hungry = state->hungry;       // fominha!
+    bool happy    = state->petting;    // carinho
+    bool eating   = state->eating;     // comendo
+    bool hungry   = state->hungry;     // fominha!
     bool sleeping = state->sleeping;   // mimindo!
 
-    int index = (happy || eating || hungry) ? 1 : state->position_index;
+    // posião mimindo
+    int index;
+    if(sleeping) {
+        index = 1;
+    } else if(happy || eating || hungry) {
+        index = 1;
+    } else {
+        index = state->position_index;
+    }
+
+    if(index < 0) index = 0;
+    if(index > 2) index = 2;
 
     int x = x_positions[index];
     int y = 32;
 
-    // corpo / boca / coração / boca mastigando / cara triste    
+    // corpo / boca / coração / boca mastigando / cara triste
     mg_ui_body_draw(canvas, x, y, state->form, happy, eating, hungry, sleeping);
 
-    // mão de carinho
-    if(state->petting) {
+    // mão de carinho (só acordado)
+    if(state->petting && !sleeping) {
         mg_ui_hand_draw(canvas, x, y);
     }
 
-    // comida (hambúrguer ou refrigerante)
-    if(eating && state->current_food != MinigotchiFoodNone) {
+    // comida (hambúrguer ou refrigerante) – só acordado
+    if(eating && !sleeping && state->current_food != MinigotchiFoodNone) {
         int food_x = x - 8;   // posição da comida
         int food_y = y + 10;
         mg_ui_food_draw(canvas, food_x, food_y, state->current_food);
     }
 
-    // ZZZ de sono
+    // ZZZ de sono 
     if(sleeping) {
         int base_x = x + 10;
         int base_y = y - 6;
@@ -73,8 +112,8 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
         int offset_y = 0;
 
         if(phase == 1) {
-            offset_x = 2;   
-            offset_y = -2;  
+            offset_x = 2;
+            offset_y = -2;
         }
 
         int z_x = base_x + offset_x;

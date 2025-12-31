@@ -19,6 +19,7 @@ static void draw_burger(Canvas* canvas, int x, int y) {
     canvas_draw_box(canvas,  x,     y + 5, 9, 2);
 }
 
+// desenho interno da soda
 static void draw_soda(Canvas* canvas, int x, int y) {
     // canudo
     canvas_draw_line(canvas, x + 4, y - 3, x + 6, y - 3);
@@ -43,4 +44,9 @@ void mg_ui_food_draw(Canvas* canvas, int x, int y, MinigotchiFood food) {
     default:
         break;
     }
+}
+
+// versão pública pra usar no HUD (mesmo desenho da soda normal)
+void mg_ui_food_draw_soda(Canvas* canvas, int x, int y) {
+    draw_soda(canvas, x, y);
 }
