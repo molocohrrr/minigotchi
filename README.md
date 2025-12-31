@@ -70,13 +70,13 @@ Apps → Games → MiniGotchi
 - Persistent save stored in apps_data
 - Real-time based aging
 - Sleep cycle (automatic sleep during night)
+- Gradual hunger levels instead of binary state
 
 ---
 
 ## Upcoming Features
 
 - Emotion system with intensity levels
-- Gradual hunger levels instead of binary state
 - Illness system
 - Extended persistence with statistics
 - New animations and expressions
@@ -153,13 +153,13 @@ Apps → Games → MiniGotchi
 - Salvamento persistente em apps_data
 - Envelhecimento baseado em tempo real (RTC)
 - Ciclo de sono
+- Fome gradual
 
 ---
 
 ## Próximas Funcionalidades
 
 - Sistema de emoções com níveis
-- Fome gradual
 - Sistema de doença
 - Persistência estendida com estatísticas
 - Novas animações e expressões
