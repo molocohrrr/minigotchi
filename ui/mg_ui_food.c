@@ -46,7 +46,6 @@ void mg_ui_food_draw(Canvas* canvas, int x, int y, MinigotchiFood food) {
     }
 }
 
-// versão pública pra usar no HUD (mesmo desenho da soda normal)
 void mg_ui_food_draw_soda(Canvas* canvas, int x, int y) {
     draw_soda(canvas, x, y);
 }

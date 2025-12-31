@@ -15,4 +15,7 @@ void mg_ui_body_draw(Canvas* canvas,
                      bool happy,
                      bool eating,
                      bool hungry,
-                     bool sleeping);
+                     bool sleeping,
+                     bool lonely);
+
+void mg_ui_draw_heart(Canvas* canvas, int x, int y);

@@ -9,7 +9,7 @@
 #define HEART_W 13
 #define HEART_H 9
 
-// Coração
+// Coração meior
 // '.' = vazio, '#' = pixel aceso
 static const char* heart_sprite[HEART_H] = {
     "..###...###..",
@@ -32,6 +32,37 @@ static void draw_heart(Canvas* canvas, int origin_x, int origin_y) {
             }
         }
     }
+}
+
+// Coração menor
+// '.' = vazio, '#' = pixel aceso
+
+#define SMALL_HEART_W 9
+#define SMALL_HEART_H 7
+
+static const char* small_heart_sprite[SMALL_HEART_H] = {
+    ".###.###.",
+    "#########",
+    "#########",
+    "#########",
+    ".#######.",
+    "..#####..",
+    "...###...",
+};
+
+static void draw_small_heart(Canvas* canvas, int origin_x, int origin_y) {
+    for(int y = 0; y < SMALL_HEART_H; y++) {
+        const char* row = small_heart_sprite[y];
+        for(int x = 0; x < SMALL_HEART_W; x++) {
+            if(row[x] == '#') {
+                canvas_draw_dot(canvas, origin_x + x, origin_y + y);
+            }
+        }
+    }
+}
+
+void mg_ui_draw_heart(Canvas* canvas, int x, int y) {
+    draw_small_heart(canvas, x, y);
 }
 
 #define MOUTH_W 9
@@ -66,6 +97,7 @@ void mg_ui_body_draw(Canvas* canvas,
                      bool happy,
                      bool eating,
                      bool hungry,
+                     bool lonely,
                      bool sleeping) {
    
     int draw_y = y;
@@ -190,8 +222,8 @@ void mg_ui_body_draw(Canvas* canvas,
         return;
     }
 
-    // Carinha fomes :-(
-    if(hungry) {
+    // Carinha fomes/carente :-(
+    if(hungry || lonely) {
         int mouth_y = draw_y + 4;
         canvas_draw_line(canvas, x - 6, mouth_y + 2, x - 3, mouth_y);
         canvas_draw_line(canvas, x - 3, mouth_y,     x + 3, mouth_y);

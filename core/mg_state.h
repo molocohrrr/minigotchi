@@ -41,6 +41,10 @@ typedef struct {
     uint8_t  hunger_level;          
     uint32_t last_hunger_update_ts; 
     bool hungry;
+    // Carência
+    uint8_t affection_level;
+    uint32_t last_affection_update_ts;
+    bool lonely;
     // Sono
     bool sleeping;
     // Evolução

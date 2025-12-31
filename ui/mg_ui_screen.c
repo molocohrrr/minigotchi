@@ -13,7 +13,7 @@ static void mg_ui_draw_hunger(Canvas* canvas, const MinigotchiState* state) {
     const int max_bars   = 5;
     const int bar_w      = 5;
     const int bar_h      = 5;
-    const int start_x    = 2;   // bem à esquerda
+    const int start_x    = 2;   // lado esquerdo
     const int start_y    = 14;  // começando abaixo do título
     const int spacing    = 2;
 
@@ -26,10 +26,32 @@ static void mg_ui_draw_hunger(Canvas* canvas, const MinigotchiState* state) {
     for(int i = 0; i < max_bars; i++) {
         int y = start_y + (max_bars - 1 - i) * (bar_h + spacing);
         if(i < state->hunger_level) {
-            // barrinha cheia
             canvas_draw_box(canvas, start_x, y, bar_w, bar_h);
         } else {
-            // slot vazio (só contorno)
+            canvas_draw_frame(canvas, start_x, y, bar_w, bar_h);
+        }
+    }
+}
+
+static void mg_ui_draw_affection(Canvas* canvas, const MinigotchiState* state) {
+    const int max_bars   = 5;
+    const int bar_w      = 5;
+    const int bar_h      = 5;
+    const int start_x    = 120; // lado direito
+    const int start_y    = 14;
+    const int spacing    = 2;
+
+    // coração pequeno acima das barrinhas
+    int heart_x = start_x - 2;
+    int heart_y = start_y - 12;
+    mg_ui_draw_heart(canvas, heart_x, heart_y);
+
+    // desenha barrinhas
+    for(int i = 0; i < max_bars; i++) {
+        int y = start_y + (max_bars - 1 - i) * (bar_h + spacing);
+        if(i < state->affection_level) {
+            canvas_draw_box(canvas, start_x, y, bar_w, bar_h);
+        } else {
             canvas_draw_frame(canvas, start_x, y, bar_w, bar_h);
         }
     }
@@ -61,19 +83,23 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     // barra de fome à esquerda
     mg_ui_draw_hunger(canvas, state);
 
-    int x_positions[3] = {25, 60, 95};
+    // barra de carinho à direita
+    mg_ui_draw_affection(canvas, state);
+
+    int x_positions[3] = {30, 60, 95};
 
     // flags derivadas do estado
     bool happy    = state->petting;    // carinho
     bool eating   = state->eating;     // comendo
     bool hungry   = state->hungry;     // fominha!
     bool sleeping = state->sleeping;   // mimindo!
+    bool lonely = state->lonely;   // carente
 
-    // posião mimindo
+    // posição parada
     int index;
     if(sleeping) {
         index = 1;
-    } else if(happy || eating || hungry) {
+    } else if(happy || eating || hungry || lonely) {
         index = 1;
     } else {
         index = state->position_index;
@@ -86,7 +112,7 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     int y = 32;
 
     // corpo / boca / coração / boca mastigando / cara triste
-    mg_ui_body_draw(canvas, x, y, state->form, happy, eating, hungry, sleeping);
+    mg_ui_body_draw(canvas, x, y, state->form, happy, eating, hungry, lonely, sleeping);
 
     // mão de carinho (só acordado)
     if(state->petting && !sleeping) {

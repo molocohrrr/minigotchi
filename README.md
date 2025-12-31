@@ -66,7 +66,8 @@ Apps → Games → MiniGotchi
 - Pet interaction 
 - Emotional changes
 - Feeding system  
-- Hunger system based on real time using RTC  
+- Hunger system based on real time using RTC
+- Emotional deprivation based on real time using RTC 
 - Persistent save stored in apps_data
 - Real-time based aging
 - Sleep cycle (automatic sleep during night)
@@ -150,6 +151,7 @@ Apps → Games → MiniGotchi
 - Mudanças emocionais
 - Sistema de alimentação  
 - Sistema de fome baseado em tempo real (RTC)  
+- Sistema de carência baseada em tempo real (RTC)  
 - Salvamento persistente em apps_data
 - Envelhecimento baseado em tempo real (RTC)
 - Ciclo de sono
