@@ -24,6 +24,7 @@ typedef enum {
     MinigotchiFormStage4,
     MinigotchiFormStage5,
     MinigotchiFormStage6,
+    MinigotchiFormStage7,
 } MinigotchiForm;
 
 typedef struct {

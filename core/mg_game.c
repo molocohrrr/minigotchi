@@ -146,6 +146,7 @@ void mg_update(MinigotchiState* state, uint32_t now_tick) {
 
 void mg_pet(MinigotchiState* state, uint32_t now_tick) {
     if(state->sleeping) return;
+    if(state->form >= MinigotchiFormStage7) return;
 
     state->petting = true;
     state->pet_end_tick = now_tick + 1500;
@@ -163,6 +164,7 @@ void mg_pet(MinigotchiState* state, uint32_t now_tick) {
 void mg_feed(MinigotchiState* state, uint32_t now_tick, MinigotchiFood food) {
     if(food == MinigotchiFoodNone) return;
     if(state->sleeping) return;
+    if(state->form >= MinigotchiFormStage7) return;
 
     state->eating       = true;
     state->current_food = food;

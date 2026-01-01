@@ -15,6 +15,12 @@
 #define MINIGOTCHI_SAVE_FILE "apps_data/minigotchi/state.bin"
 #define MINIGOTCHI_SAVE_PATH EXT_PATH(MINIGOTCHI_SAVE_FILE)
 
+static void minigotchi_delete_state_file(void) {
+    Storage* storage = furi_record_open(RECORD_STORAGE);
+    storage_common_remove(storage, MINIGOTCHI_SAVE_PATH);
+    furi_record_close(RECORD_STORAGE);
+}
+
 typedef struct {
     MinigotchiState state;
     Gui* gui;
@@ -137,20 +143,35 @@ int32_t minigotchi_app(void* p) {
 
         uint32_t now = furi_get_tick();
 
-        if(status == FuriStatusOk) {
-            if(event.type == InputTypeShort) {
-                if(event.key == InputKeyOk) {
+        if(status == FuriStatusOk && event.type == InputTypeShort) {
+            switch(event.key) {
+            case InputKeyOk:
+                if(app->state.form == MinigotchiFormStage7) {
+                    minigotchi_delete_state_file();
+                    mg_init(&app->state);
+                    minigotchi_save_state(&app->state);
+                } else {
                     mg_pet(&app->state, now);
-                } else if(event.key == InputKeyLeft) {
-                    mg_feed(&app->state, now, MinigotchiFoodBurger);
-                    minigotchi_save_state(&app->state);
-                } else if(event.key == InputKeyRight) {
-                    mg_feed(&app->state, now, MinigotchiFoodSoda);
-                    minigotchi_save_state(&app->state);
-                } else if(event.key == InputKeyBack) {
-                    minigotchi_save_state(&app->state);
-                    app->state.running = false;
                 }
+                break;
+
+            case InputKeyLeft:
+                mg_feed(&app->state, now, MinigotchiFoodBurger);
+                minigotchi_save_state(&app->state);
+                break;
+
+            case InputKeyRight:
+                mg_feed(&app->state, now, MinigotchiFoodSoda);
+                minigotchi_save_state(&app->state);
+                break;
+
+            case InputKeyBack:
+                minigotchi_save_state(&app->state);
+                app->state.running = false;
+                break;
+
+            default:
+                break;
             }
         }
 

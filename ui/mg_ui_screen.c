@@ -8,7 +8,9 @@
 #include "mg_ui_body.h"
 #include "mg_ui_hand.h"
 #include "mg_ui_food.h"
+#include "mg_ui_symbols.h"
 
+// Barra fominha
 static void mg_ui_draw_hunger(Canvas* canvas, const MinigotchiState* state) {
     const int max_bars   = 5;
     const int bar_w      = 5;
@@ -33,6 +35,7 @@ static void mg_ui_draw_hunger(Canvas* canvas, const MinigotchiState* state) {
     }
 }
 
+// Barra carência
 static void mg_ui_draw_affection(Canvas* canvas, const MinigotchiState* state) {
     const int max_bars   = 5;
     const int bar_w      = 5;
@@ -44,7 +47,7 @@ static void mg_ui_draw_affection(Canvas* canvas, const MinigotchiState* state) {
     // coração pequeno acima das barrinhas
     int heart_x = start_x - 2;
     int heart_y = start_y - 12;
-    mg_ui_draw_heart(canvas, heart_x, heart_y);
+    mg_ui_draw_small_heart(canvas, heart_x, heart_y);
 
     // desenha barrinhas
     for(int i = 0; i < max_bars; i++) {
@@ -57,6 +60,7 @@ static void mg_ui_draw_affection(Canvas* canvas, const MinigotchiState* state) {
     }
 }
 
+// Título do jogo
 void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     canvas_clear(canvas);
 
@@ -81,11 +85,16 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     );
 
     // barra de fome à esquerda
-    mg_ui_draw_hunger(canvas, state);
-
+    if(state->form != MinigotchiFormStage7) {
+       mg_ui_draw_hunger(canvas, state);
+    }
+    
     // barra de carinho à direita
-    mg_ui_draw_affection(canvas, state);
-
+    if(state->form != MinigotchiFormStage7) {
+        mg_ui_draw_affection(canvas, state);    
+    }
+    
+    // Posições de movimento do bichinho
     int x_positions[3] = {30, 60, 95};
 
     // flags derivadas do estado
@@ -97,7 +106,7 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
 
     // posição parada
     int index;
-    if(sleeping) {
+    if(state->form == MinigotchiFormStage7 || sleeping) {
         index = 1;
     } else if(happy || eating || hungry || lonely) {
         index = 1;
@@ -108,8 +117,8 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     if(index < 0) index = 0;
     if(index > 2) index = 2;
 
-    int x = x_positions[index];
-    int y = 32;
+    int x = x_positions[index]; // altura central, aumenta pra direita
+    int y = 32; // largura central, aumenta pra baixo 
 
     // corpo / boca / coração / boca mastigando / cara triste
     mg_ui_body_draw(canvas, x, y, state->form, happy, eating, hungry, lonely, sleeping);
@@ -150,7 +159,17 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
         canvas_draw_str(canvas, z_x + 12,    z_y - 8,     "Z");
     }
 
+    // Cruz de morto
+    if(state->form == MinigotchiFormStage7) {
+        int crux_x = x + 20;
+        int crux_y = y - 15;
+        mg_ui_draw_crux(canvas, crux_x, crux_y);
+    }
+
     // menu inferior
-    canvas_draw_str(canvas, 2, 62, "OK: Love     L: Food     R: Drink");
-    //canvas_draw_str(canvas, 2, 62, "BACK: Sair");
+    if(state->form == MinigotchiFormStage7) {
+        canvas_draw_str(canvas, 35, 62, "OK: New game");
+    } else {
+        canvas_draw_str(canvas, 2, 62, "OK: Love     L: Food     R: Drink");
+    }
 }

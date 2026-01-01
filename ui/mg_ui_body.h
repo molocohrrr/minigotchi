@@ -1,6 +1,6 @@
 // Minigotchi - UI Body (Header)
 // Declara o desenho do corpo do Minigotchi,
-// incluindo olhos, boca e coração quando feliz.
+// incluindo olhos, boca, etc.
 
 #pragma once
 
@@ -17,5 +17,3 @@ void mg_ui_body_draw(Canvas* canvas,
                      bool hungry,
                      bool sleeping,
                      bool lonely);
-
-void mg_ui_draw_heart(Canvas* canvas, int x, int y);

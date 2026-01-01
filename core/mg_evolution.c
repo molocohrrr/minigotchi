@@ -13,10 +13,6 @@ static uint32_t mg_day_index(const DateTime* dt) {
 }
 
 void mg_evolution_init(MinigotchiState* state, uint32_t now_ts) {
-    if(state->last_evolution_day != 0) {
-        return;
-    }
-
     // Novo bichinho (primeira vez / sem save válido)
     state->birth_timestamp = now_ts;
     state->last_feed_timestamp = now_ts;
@@ -32,7 +28,7 @@ void mg_evolution_init(MinigotchiState* state, uint32_t now_ts) {
 void mg_evolution_update(MinigotchiState* state, uint32_t now_ts) {
     (void)now_ts;
 
-    if(state->form >= MinigotchiFormStage6) {
+    if(state->form == MinigotchiFormStage7) {
         return;
     }
 
@@ -58,8 +54,8 @@ void mg_evolution_update(MinigotchiState* state, uint32_t now_ts) {
     uint32_t diff_days = today - state->last_evolution_day;
 
     uint32_t new_form = (uint32_t)state->form + diff_days;
-    if(new_form > (uint32_t)MinigotchiFormStage6) {
-        new_form = (uint32_t)MinigotchiFormStage6;
+    if(new_form > (uint32_t)MinigotchiFormStage7) {
+        new_form = (uint32_t)MinigotchiFormStage7;
     }
 
     state->form = (MinigotchiForm)new_form;
