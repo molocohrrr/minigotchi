@@ -1,5 +1,7 @@
 # MiniGotchi — A Tamagotchi-like pet for Flipper Zero
 
+![MiniGotchi Screen](./images/minigotchi_screen.jpg)
+
 ## English Version
 
 ### Description
@@ -71,13 +73,14 @@ Apps → Games → MiniGotchi
 - Persistent save stored in apps_data
 - Real-time based aging
 - Sleep cycle (automatic sleep during night)
-
+- Death system
+  
 ---
 
 ## Upcoming Features
 
 - Emotion system with intensity levels
-- Illness and death system
+- Illness system
 - Extended persistence with statistics
 - New animations and expressions
 
@@ -154,13 +157,14 @@ Apps → Games → MiniGotchi
 - Salvamento persistente em apps_data
 - Envelhecimento baseado em tempo real (RTC)
 - Ciclo de sono (dorme automaticamente a noite)
+- Sistema de falecimento
 
 ---
 
 ## Próximas Funcionalidades
 
 - Sistema de emoções com níveis
-- Sistema de adoecimento e morte
+- Sistema de adoecimento
 - Persistência estendida com estatísticas
 - Novas animações e expressões
 
