@@ -10,6 +10,7 @@
 #include "core/mg_state.h"
 #include "core/mg_game.h"
 #include "ui/mg_ui_screen.h"
+#include "sounds/mg_sound.h"
 
 #define MINIGOTCHI_SAVE_DIR  "apps_data/minigotchi"
 #define MINIGOTCHI_SAVE_FILE "apps_data/minigotchi/state.bin"
@@ -144,6 +145,7 @@ int32_t minigotchi_app(void* p) {
         uint32_t now = furi_get_tick();
 
         if(status == FuriStatusOk && event.type == InputTypeShort) {
+            mg_mario_push(event.key);
             switch(event.key) {
             case InputKeyOk:
                 if(app->state.form == MinigotchiFormStage7) {
@@ -154,22 +156,18 @@ int32_t minigotchi_app(void* p) {
                     mg_pet(&app->state, now);
                 }
                 break;
-
             case InputKeyLeft:
                 mg_feed(&app->state, now, MinigotchiFoodBurger);
                 minigotchi_save_state(&app->state);
                 break;
-
             case InputKeyRight:
                 mg_feed(&app->state, now, MinigotchiFoodSoda);
                 minigotchi_save_state(&app->state);
                 break;
-
             case InputKeyBack:
                 minigotchi_save_state(&app->state);
                 app->state.running = false;
                 break;
-
             default:
                 break;
             }
