@@ -156,6 +156,19 @@ void mg_ui_body_draw(Canvas* canvas,
         canvas_draw_line(canvas, x + 5, eye_y + 1, x + 8, eye_y - 1);
     }
 
+    // Bigode (só nas formas finais)
+    if(form == MinigotchiFormStage6 || form == MinigotchiFormStage7) {
+        int wy = draw_y + 4; // altura central da boca
+
+        // lado esquerdo
+        canvas_draw_line(canvas, x - 12, wy - 1, x - 6, wy);
+        canvas_draw_line(canvas, x - 12, wy + 1, x - 6, wy);
+
+        // lado direito
+        canvas_draw_line(canvas, x + 6,  wy, x + 12, wy - 1);
+        canvas_draw_line(canvas, x + 6,  wy, x + 12, wy + 1);
+    }
+
     // BOCA
     // Comendo
     if(eating) {
@@ -216,18 +229,5 @@ void mg_ui_body_draw(Canvas* canvas,
     if(form > MinigotchiFormStage1 && form <= MinigotchiFormStage6) {
         int mouth_top = draw_y + 2;
         draw_mouth_uwu(canvas, x, mouth_top);
-    }
-
-    // Bigode (só nas formas finais)
-    if(form == MinigotchiFormStage6 || form == MinigotchiFormStage7) {
-        int wy = draw_y + 4; // altura central da boca
-
-        // lado esquerdo
-        canvas_draw_line(canvas, x - 12, wy - 1, x - 6, wy);
-        canvas_draw_line(canvas, x - 12, wy + 1, x - 6, wy);
-
-        // lado direito
-        canvas_draw_line(canvas, x + 6,  wy, x + 12, wy - 1);
-        canvas_draw_line(canvas, x + 6,  wy, x + 12, wy + 1);
     }
 }

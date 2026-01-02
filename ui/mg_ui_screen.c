@@ -170,6 +170,6 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     if(state->form == MinigotchiFormStage7) {
         canvas_draw_str(canvas, 35, 62, "OK: New game");
     } else {
-        canvas_draw_str(canvas, 2, 62, "OK: Love     L: Food     R: Drink");
+        canvas_draw_str(canvas, 2, 62, "OK: Love      L: Food      R: Drink");
     }
 }
