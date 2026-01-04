@@ -1,5 +1,5 @@
 // Minigotchi - UI Symbols (Header)
-// Declara o símbolos que acompanham o Minigotchi,
+// Declara os símbolos que acompanham o Minigotchi,
 // incluindo coração quando feliz, cruz se morto, etc.
 
 #pragma once

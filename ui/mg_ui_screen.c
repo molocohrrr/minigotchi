@@ -9,6 +9,7 @@
 #include "mg_ui_hand.h"
 #include "mg_ui_food.h"
 #include "mg_ui_symbols.h"
+#include "mg_ui_menu.h"
 
 // Barra fominha
 static void mg_ui_draw_hunger(Canvas* canvas, const MinigotchiState* state) {
@@ -175,6 +176,9 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     if(state->form == MinigotchiFormStage7) {
         canvas_draw_str(canvas, 35, 62, "OK: New game");
     } else {
-        canvas_draw_str(canvas, 2, 62, "OK: Love | < & >: Food | V: Cure");
+        mg_ui_menu_draw_ball(canvas, 2, 64);
+        mg_ui_menu_draw_left(canvas, 40, 64);
+        mg_ui_menu_draw_right(canvas, 57, 64);
+        mg_ui_menu_draw_down(canvas, 95, 64);
     }
 }
