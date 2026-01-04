@@ -32,6 +32,31 @@ static void draw_mouth_uwu(Canvas* canvas, int center_x, int top_y) {
     }
 }
 
+#define P_W 11
+#define P_H 4
+
+// Boquinha :-P
+// '.' = vazio, '#' = pixel aceso
+static const char* p_sprite[P_H] = {
+    "###########", 
+    "......#.#.#", 
+    "......#...#", 
+    "......#####", 
+};
+
+static void draw_mouth_p(Canvas* canvas, int center_x, int top_y) {
+    int origin_x = center_x - (P_W / 2);
+
+    for(int y = 0; y < P_H; y++) {
+        const char* row = p_sprite[y];
+        for(int x = 0; x < P_W; x++) {
+            if(row[x] == '#') {
+                canvas_draw_dot(canvas, origin_x + x, top_y + y);
+            }
+        }
+    }
+}
+
 void mg_ui_body_draw(Canvas* canvas,
                      int x,
                      int y,
@@ -40,7 +65,9 @@ void mg_ui_body_draw(Canvas* canvas,
                      bool eating,
                      bool hungry,
                      bool lonely,
-                     bool sleeping) {   
+                     bool sleeping,
+                     bool sick,
+                     bool curing) {   
     int draw_y = y;
 
     // formas 5, 6 e 7 um pouco mais embaixo (coelho maior)
@@ -120,6 +147,19 @@ void mg_ui_body_draw(Canvas* canvas,
         canvas_draw_line(canvas, rx1,     top_y2, rx2,     top_y2);
     }
 
+    // Bigode (só nas formas finais)
+    if(form == MinigotchiFormStage6 || form == MinigotchiFormStage7) {
+        int wy = draw_y + 4; // altura central da boca
+
+        // lado esquerdo
+        canvas_draw_line(canvas, x - 12, wy - 1, x - 6, wy);
+        canvas_draw_line(canvas, x - 12, wy + 1, x - 6, wy);
+
+        // lado direito
+        canvas_draw_line(canvas, x + 6,  wy, x + 12, wy - 1);
+        canvas_draw_line(canvas, x + 6,  wy, x + 12, wy + 1);
+    }
+
     // OLHOS
     // Mimindo -.-
     if(sleeping) {
@@ -130,6 +170,20 @@ void mg_ui_body_draw(Canvas* canvas,
         canvas_draw_box(canvas, x + 3, eye_y, 4, 1);
         // boca 
         canvas_draw_box(canvas, x + 0, 40, 2, 2);
+        return;
+    }
+
+    // Doente: cara "-.-" (não é a de dormir)
+    bool ill = sick || curing;
+    if(ill) {
+        int eye_y = draw_y - 2;
+
+        // '-' esquerda
+        canvas_draw_line(canvas, x - 7, eye_y, x - 3, eye_y);
+        // '.' centro
+        draw_mouth_p(canvas, x, y + 8);
+        // '-' direita
+        canvas_draw_line(canvas, x + 3, eye_y, x + 7, eye_y);
         return;
     }
 
@@ -154,19 +208,6 @@ void mg_ui_body_draw(Canvas* canvas,
         // olho direito
         canvas_draw_line(canvas, x + 5, eye_y - 1, x + 8, eye_y + 1);
         canvas_draw_line(canvas, x + 5, eye_y + 1, x + 8, eye_y - 1);
-    }
-
-    // Bigode (só nas formas finais)
-    if(form == MinigotchiFormStage6 || form == MinigotchiFormStage7) {
-        int wy = draw_y + 4; // altura central da boca
-
-        // lado esquerdo
-        canvas_draw_line(canvas, x - 12, wy - 1, x - 6, wy);
-        canvas_draw_line(canvas, x - 12, wy + 1, x - 6, wy);
-
-        // lado direito
-        canvas_draw_line(canvas, x + 6,  wy, x + 12, wy - 1);
-        canvas_draw_line(canvas, x + 6,  wy, x + 12, wy + 1);
     }
 
     // BOCA

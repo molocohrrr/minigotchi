@@ -48,6 +48,14 @@ typedef struct {
     bool lonely;
     // Sono
     bool sleeping;
+    // Doença
+    bool sick;               
+    uint32_t hunger_zero_since_ts; 
+    uint32_t affection_zero_since_ts; 
+    // Cura 
+    bool curing;
+    uint32_t cure_end_tick;  
+    bool cured_event;        
     // Evolução
     MinigotchiForm form;
     uint32_t birth_timestamp;

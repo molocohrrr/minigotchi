@@ -103,12 +103,12 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     bool hungry   = state->hungry;     // fominha!
     bool sleeping = state->sleeping;   // mimindo!
     bool lonely = state->lonely;   // carente
+    bool sick   = state->sick;
+    bool curing = state->curing;
 
     // posição parada
     int index;
-    if(state->form == MinigotchiFormStage7 || sleeping) {
-        index = 1;
-    } else if(happy || eating || hungry || lonely) {
+    if (happy || eating || hungry || lonely || sick || curing || state->form == MinigotchiFormStage7) {
         index = 1;
     } else {
         index = state->position_index;
@@ -121,7 +121,12 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     int y = 32; // largura central, aumenta pra baixo 
 
     // corpo / boca / coração / boca mastigando / cara triste
-    mg_ui_body_draw(canvas, x, y, state->form, happy, eating, hungry, lonely, sleeping);
+    mg_ui_body_draw(canvas, x, y, state->form, happy, eating, hungry, lonely, sleeping, sick, curing);
+
+    // injeção da cura
+    if(state->curing) {
+        mg_ui_draw_syringe(canvas, x + 3, y);
+    }
 
     // mão de carinho (só acordado)
     if(state->petting && !sleeping) {
@@ -129,7 +134,7 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     }
 
     // comida (hambúrguer ou refrigerante) – só acordado
-    if(eating && !sleeping && state->current_food != MinigotchiFoodNone) {
+    if(eating && !sleeping && !sick && state->current_food != MinigotchiFoodNone) {
         int food_x = x - 8;   // posição da comida
         int food_y = y + 10;
         mg_ui_food_draw(canvas, food_x, food_y, state->current_food);
@@ -170,6 +175,6 @@ void mg_ui_screen_draw(Canvas* canvas, const MinigotchiState* state) {
     if(state->form == MinigotchiFormStage7) {
         canvas_draw_str(canvas, 35, 62, "OK: New game");
     } else {
-        canvas_draw_str(canvas, 2, 62, "OK: Love      L: Food      R: Drink");
+        canvas_draw_str(canvas, 2, 62, "OK: Love | < & >: Food | V: Cure");
     }
 }

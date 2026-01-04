@@ -11,3 +11,4 @@ void mg_init(MinigotchiState* state);
 void mg_update(MinigotchiState* state, uint32_t now);
 void mg_pet(MinigotchiState* state, uint32_t now);
 void mg_feed(MinigotchiState* state, uint32_t now, MinigotchiFood food);
+void mg_cure(MinigotchiState* state, uint32_t now_tick);

@@ -168,12 +168,19 @@ int32_t minigotchi_app(void* p) {
                 minigotchi_save_state(&app->state);
                 app->state.running = false;
                 break;
+            case InputKeyDown:
+                mg_cure(&app->state, now);
+                break;
             default:
                 break;
             }
         }
 
         mg_update(&app->state, now);
+
+        if(app->state.cured_event) {
+            minigotchi_save_state(&app->state);
+        }
 
         if(app->state.form != last_form) {
             minigotchi_save_state(&app->state);

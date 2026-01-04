@@ -10,6 +10,8 @@
 
 #define HUNGER_INTERVAL_SEC (60u * 60u) // 1h por barrinha
 #define AFFECTION_INTERVAL_SEC (2u * 60u * 60u)  // 2h por barrinha
+#define SICK_AFTER_SEC (3u * 60u * 60u) // 3h zerado = doente
+#define CURE_ANIM_MS   (1500u)          // animação da injeção
 
 static uint32_t mg_now_epoch(void) {
     return furi_hal_rtc_get_timestamp();
@@ -52,21 +54,64 @@ void mg_init(MinigotchiState* state) {
     // sono
     state->sleeping = mg_is_sleep_time();
 
+    // doença
+    state->sick = false;
+    state->hunger_zero_since_ts = 0;
+    state->affection_zero_since_ts = 0;
+
+    // cura
+    state->curing = false;
+    state->cure_end_tick = 0;
+    state->cured_event = false;
+
     // evolução
     mg_evolution_init(state, now_ts);
+}
+
+static void mg_enter_sick(MinigotchiState* state) {
+    state->sick = true;
+
+    state->position_index = 1;
+    state->petting = false;
+    state->eating = false;
+    state->current_food = MinigotchiFoodNone;
+
+    state->hungry = true;
+    state->lonely = true;
 }
 
 void mg_update(MinigotchiState* state, uint32_t now_tick) {
     uint32_t now_ts = mg_now_epoch();
 
+    state->cured_event = false;
+
     state->sleeping = mg_is_sleep_time();
 
+    // Cura da doença
+    if(state->curing && now_tick >= state->cure_end_tick) {
+        state->curing = false;
+        state->sick = false;
+        // aumehta barrinhas e reseta estados
+        if(state->hunger_level < 2) state->hunger_level = 2;
+        if(state->affection_level < 2) state->affection_level = 2;
+        state->last_hunger_update_ts = now_ts;
+        state->last_affection_update_ts = now_ts;
+        state->hunger_zero_since_ts = 0;
+        state->affection_zero_since_ts = 0;
+        state->hungry = (state->hunger_level == 0);
+        state->lonely = (state->affection_level == 0);
+
+        state->cured_event = true;
+    }
+
+    // 0) Dormindo
     if(state->sleeping) {
-        state->position_index = 1;            
-        state->petting        = false;
-        state->eating         = false;
-        state->current_food   = MinigotchiFoodNone;
-        state->hungry         = false;
+        state->position_index = 1;
+        state->petting = false;
+        state->eating = false;
+        state->current_food = MinigotchiFoodNone;
+        state->hungry = false;
+        state->lonely = false;
 
         mg_evolution_update(state, now_ts);
         return;
@@ -85,6 +130,16 @@ void mg_update(MinigotchiState* state, uint32_t now_tick) {
         state->position_index += state->direction;
         if(state->position_index < 0) state->position_index = 0;
         if(state->position_index > 2) state->position_index = 2;
+    }
+
+    if(state->sick || state->curing) {
+        state->position_index = 1;
+        state->petting = false;
+        state->eating = false;
+        state->current_food = MinigotchiFoodNone;
+
+        mg_evolution_update(state, now_ts);
+        return;
     }
 
     // 2) timers de carinho
@@ -140,7 +195,25 @@ void mg_update(MinigotchiState* state, uint32_t now_tick) {
     // bool lonely: só é verdade quando está na última barrinha
     state->lonely = (state->affection_level == 0);
 
-    // 6) evolução (mudança de forma às 9h)
+
+    // 6) doença
+    if(state->hunger_level == 0) {
+        if(state->hunger_zero_since_ts == 0) state->hunger_zero_since_ts = now_ts;
+        else if((now_ts - state->hunger_zero_since_ts) >= SICK_AFTER_SEC) mg_enter_sick(state);
+    } else {
+        state->hunger_zero_since_ts = 0;
+    }
+
+    if(!state->sick) {
+        if(state->affection_level == 0) {
+            if(state->affection_zero_since_ts == 0) state->affection_zero_since_ts = now_ts;
+            else if((now_ts - state->affection_zero_since_ts) >= SICK_AFTER_SEC) mg_enter_sick(state);
+        } else {
+            state->affection_zero_since_ts = 0;
+        }
+    }
+
+    // 7) evolução (mudança de forma às 9h)
     mg_evolution_update(state, now_ts);
 }
 
@@ -177,4 +250,13 @@ void mg_feed(MinigotchiState* state, uint32_t now_tick, MinigotchiFood food) {
     }
     state->last_hunger_update_ts = now_ts;
     state->hungry = (state->hunger_level == 0);
+}
+
+void mg_cure(MinigotchiState* state, uint32_t now_tick) {
+    if(state->sleeping) return;
+    if(!state->sick) return;
+    if(state->curing) return;
+
+    state->curing = true;
+    state->cure_end_tick = now_tick + CURE_ANIM_MS;
 }

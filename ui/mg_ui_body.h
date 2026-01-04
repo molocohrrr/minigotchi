@@ -16,4 +16,6 @@ void mg_ui_body_draw(Canvas* canvas,
                      bool eating,
                      bool hungry,
                      bool sleeping,
-                     bool lonely);
+                     bool lonely,
+                     bool sick,
+                     bool curing);
