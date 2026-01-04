@@ -74,13 +74,13 @@ Apps → Games → MiniGotchi
 - Real-time based aging
 - Sleep cycle (automatic sleep during night)
 - Death system
+- Illness system
   
 ---
 
 ## Upcoming Features
 
 - Emotion system with intensity levels
-- Illness system
 - Extended persistence with statistics
 - New animations and expressions
 
@@ -158,13 +158,13 @@ Apps → Games → MiniGotchi
 - Envelhecimento baseado em tempo real (RTC)
 - Ciclo de sono (dorme automaticamente a noite)
 - Sistema de falecimento
+- Sistema de adoecimento
 
 ---
 
 ## Próximas Funcionalidades
 
 - Sistema de emoções com níveis
-- Sistema de adoecimento
 - Persistência estendida com estatísticas
 - Novas animações e expressões
 
